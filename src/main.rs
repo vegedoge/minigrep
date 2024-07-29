@@ -1,9 +1,16 @@
-use std::{env, fs};
+use std::{env, fs, process};
 fn main() {
     // input from args
     let args: Vec<String> = env::args().collect(); 
     
-    let config = Config::new(&args);
+    let config = Config::build(&args).unwrap_or_else 
+    (
+        |err| 
+        { 
+            println!("Problem parsing error: {err}");
+            process::exit(1);
+        }
+    );
 
     println!("Searcing for {} in {}", config.query, config.file_path);
 
@@ -20,13 +27,14 @@ struct Config{
 
 // Construct func for Config
 impl Config{
-    fn new(args: &[String]) -> Config {
+    fn build(args: &[String]) -> Result<Config, &'static str> {
+        // build returns a Config or an Err-msg with static lifetime
         if args.len() < 3 {
-            panic!("Not enough arugments")
+            return Err("Not enough arugments")
         }
         let query = args[1].clone();
         let file_path = args[2].clone();
 
-        Config{ query, file_path }
+        Ok(Config{ query, file_path })
     }
 }
