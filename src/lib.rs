@@ -1,6 +1,23 @@
 use std::error::Error;
 use std::fs;
 
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn one_result() {
+        let query = "duct";
+        let contents = "\
+        Rust:
+        safe, fast, productive.
+        Pick three.";
+
+        assert_eq!(vec!["safe, fast, productive."], search(query, contents));
+    }
+
+}
+
 pub struct Config{
     pub query: String,
     pub file_path: String,
@@ -26,4 +43,8 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>>{
     println!("with text: \n{contents}"); 
 
     Ok(())
+}
+
+pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
+    vec![]
 }
