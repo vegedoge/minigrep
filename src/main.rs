@@ -1,4 +1,5 @@
 use std::{env, fs, process};
+use std::error::Error;
 fn main() {
     // input from args
     let args: Vec<String> = env::args().collect(); 
@@ -14,10 +15,17 @@ fn main() {
 
     println!("Searcing for {} in {}", config.query, config.file_path);
 
-    let contents = fs::read_to_string(config.file_path)
-        .expect("Should have been able to read the file");
+    run(config);
 
-    println!("with text: \n{contents}");
+    
+}
+
+fn run(config: Config) -> Result<(), Box<dyn Error>>{
+    let contents = fs::read_to_string(config.file_path)?;
+
+    println!("with text: \n{contents}"); 
+
+    Ok(())
 }
 
 struct Config{
