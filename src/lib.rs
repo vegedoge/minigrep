@@ -40,7 +40,9 @@ impl Config{
 pub fn run(config: Config) -> Result<(), Box<dyn Error>>{
     let contents = fs::read_to_string(config.file_path)?;
 
-    println!("with text: \n{contents}"); 
+    for line in search(&config.query, &contents) {
+        println!("{line}")
+    }
 
     Ok(())
 }
@@ -53,6 +55,10 @@ pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
         if line.contains(query) {
             results.push(line);
         }
+    }
+
+    if results.len() == 0 {
+        println!("No target found");
     }
     
     results
