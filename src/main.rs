@@ -9,7 +9,7 @@ fn main() {
     (
         |err| 
         { 
-            println!("Problem parsing error: {err}");
+            eprintln!("Problem parsing error: {err}");
             process::exit(1);
         }
     );
@@ -17,7 +17,7 @@ fn main() {
     println!("Searcing for '{}' in {}", config.query, config.file_path);
 
     if let Err(e) = minigrep::run(config) {
-        println!("Application error {e}");
+        eprintln!("Application error {e}");
         process::exit(1);
     }
 
