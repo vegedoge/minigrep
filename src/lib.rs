@@ -53,7 +53,7 @@ impl Config{
         let query = args[1].clone();
         let file_path = args[2].clone();
         
-        // get ignore from both ENV_VALUE and args
+        // get ignore_case from both ENV_VALUE and args
         let ignore_case = env::var("IGNORE_CASE").map_or_else(
     |_| {
                 // if env value doesn't exist, check args
