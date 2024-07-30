@@ -53,8 +53,19 @@ impl Config{
         let query = args[1].clone();
         let file_path = args[2].clone();
         
-        // if has a value -> true else -> false
-        let ignore_case = env::var("IGNORE_CASE").is_ok();
+        // get ignore from both ENV_VALUE and args
+        let ignore_case = env::var("IGNORE_CASE").map_or_else(
+    |_| {
+                // if env value doesn't exist, check args
+                args.iter().any(
+                    |arg| arg.to_lowercase() == "-i" || arg.to_lowercase() == "-ignore_case"
+                )
+            },
+          |env_value| {
+                // if env value exist, collect it's value
+                env_value == "1" || env_value.to_lowercase() == "true"
+          } 
+        );
 
         Ok(Config{ query, file_path, ignore_case })
     }
