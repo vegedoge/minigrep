@@ -45,19 +45,27 @@ pub struct Config{
 
 // Construct func for Config
 impl Config{
-    pub fn build(args: &[String]) -> Result<Config, &'static str> {
+    pub fn build(
+        mut args: impl Iterator<Item = String>,
+    ) -> Result<Config, &'static str> {
         // build returns a Config or an Err-msg with static lifetime
-        if args.len() < 3 {
-            return Err("Not enough arugments")
-        }
-        let query = args[1].clone();
-        let file_path = args[2].clone();
-        
+        args.next();
+
+        let query = match args.next() {
+            Some(arg) => arg,
+            None => return Err("Didn't get a query string"),
+        };
+
+        let file_path = match args.next() {
+            Some(arg) => arg,
+            None => return Err("Didn't get a file path"),
+        };
+
         // get ignore_case from both ENV_VALUE and args
         let ignore_case = env::var("IGNORE_CASE").map_or_else(
     |_| {
                 // if env value doesn't exist, check args
-                args.iter().any(
+                args.any(
                     |arg| arg.to_lowercase() == "-i" || arg.to_lowercase() == "-ignore_case"
                 )
             },
