@@ -97,19 +97,9 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>>{
 
 pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
     // result storage
-    let mut results = Vec::new();
-    // iteration
-    for line in contents.lines() {
-        if line.contains(query) {
-            results.push(line);
-        }
-    }
-
-    if results.len() == 0 {
-        println!("No target found");
-    }
-    
-    results
+    contents.lines()
+        .filter(|line| line.contains(query))
+        .collect()
 }
 
 pub fn search_case_insensitive<'a>(
@@ -118,17 +108,7 @@ pub fn search_case_insensitive<'a>(
 -> Vec<&'a str> {
     // turn to lower case
     let query = query.to_lowercase();
-    let mut results = Vec::new();
-
-    for line in contents.lines() {
-        if line.to_lowercase().contains(&query) {
-            results.push(line);
-        }
-    }
-
-    if results.len() == 0 {
-        println!("No target found");
-    }
-
-    results
+    contents.lines()
+        .filter(|line| line.to_lowercase().contains(&query))
+        .collect()
 }
